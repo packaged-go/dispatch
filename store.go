@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"html"
+	"html/template"
 	"sort"
 	"strings"
 	"sync"
@@ -216,12 +217,12 @@ func (s *ResourceStore) GenerateHTMLPreloads() string {
 }
 
 // GenerateHTMLIncludes renders CSS or JavaScript include tags.
-func (s *ResourceStore) GenerateHTMLIncludes(resourceType string) string {
+func (s *ResourceStore) GenerateHTMLIncludes(resourceType string) template.HTML {
 	return s.GenerateHTMLIncludesAt(resourceType, nil)
 }
 
 // GenerateHTMLIncludesAt renders include tags for one priority when priority is non-nil.
-func (s *ResourceStore) GenerateHTMLIncludesAt(resourceType string, priority *int, excludePriority ...int) string {
+func (s *ResourceStore) GenerateHTMLIncludesAt(resourceType string, priority *int, excludePriority ...int) template.HTML {
 	var b strings.Builder
 	for _, resource := range s.ResourcesAt(resourceType, priority, excludePriority...) {
 		if isInlineKey(resource.URI) {
@@ -238,7 +239,7 @@ func (s *ResourceStore) GenerateHTMLIncludesAt(resourceType string, priority *in
 			b.WriteString(fmt.Sprintf(`<link href="%s"%s>`, html.EscapeString(resource.URI), renderAttrs(resource.Attrs, nil)))
 		}
 	}
-	return b.String()
+	return template.HTML(b.String())
 }
 
 func defaultAttrs(resourceType string, attrs Attrs) Attrs {

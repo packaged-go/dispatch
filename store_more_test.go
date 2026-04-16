@@ -30,10 +30,10 @@ func TestResourceStoreZeroValuePriorityPreloadAndClear(t *testing.T) {
 		t.Fatalf("unexpected preloads: %s", got)
 	}
 	js := store.GenerateHTMLIncludes(TypeJS)
-	if !strings.Contains(js, `async`) || strings.Contains(js, `defer`) || !strings.Contains(js, `data-id="7"`) {
+	if !strings.Contains(string(js), `async`) || strings.Contains(js, `defer`) || !strings.Contains(js, `data-id="7"`) {
 		t.Fatalf("unexpected JS attributes: %s", js)
 	}
-	if !strings.Contains(js, `<script>alert('hi');</script>`) {
+	if !strings.Contains(string(js), `<script>alert('hi');</script>`) {
 		t.Fatalf("expected inline JS: %s", js)
 	}
 
